@@ -45,6 +45,7 @@ class VoxCPMDemo:
 
         repo_id = os.environ.get("HF_REPO_ID", "").strip()
         if len(repo_id) > 0:
+            # Use double underscore separator to avoid nested dir issues on Windows
             target_dir = os.path.join("models", repo_id.replace("/", "__"))
             if not os.path.isdir(target_dir):
                 try:
@@ -71,6 +72,5 @@ class VoxCPMDemo:
     # ---------- Functional endpoints ----------
     def prompt_wav_recognition(self, prompt_wav: Optional[str]) -> str:
         if prompt_wav is None:
+            # Return empty string early instead of letting downstream code fail
             return ""
-        res = self.asr_model.generate(input=prompt_wav, language="auto", use_itn=True)
-        text = res[0]["text"].split('|>')[-1
